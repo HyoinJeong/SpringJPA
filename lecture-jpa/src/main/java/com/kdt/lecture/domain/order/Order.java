@@ -14,14 +14,21 @@ public class Order {
     @Id
     @Column(name = "id")
     private String uuid;
+
     @Column(name = "memo")
     private String memo;
+
     @Enumerated(value = EnumType.STRING)
     private OrderStatus orderStatus;
+
     @Column(name = "order_datetime", columnDefinition = "TIMESTAMP")
     private LocalDateTime orderDateTime;
 
     // member_fk
-    @Column(name = "member_id")
+    @Column(name = "member_id", insertable = false,updatable = false)
     private Long memberId;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id", referencedColumnName = "id")
+    private Member member;
 }
