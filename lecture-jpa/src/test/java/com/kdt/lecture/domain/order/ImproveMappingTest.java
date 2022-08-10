@@ -63,20 +63,19 @@ public class ImproveMappingTest {
 
 
     @Test
-    void multi_key_test() {
+    void multi_key_test_embedded() {
         EntityManager entityManager = emf.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
 
         transaction.begin();
 
         Parent parent = new Parent();
-        parent.setId1("id1");
-        parent.setId2("id2");
+        parent.setId(new ParentId("id1", "id2"));
         entityManager.persist(parent);
 
         transaction.commit();
 
         Parent entity = entityManager.find(Parent.class, new ParentId("id1", "id2"));
-        log.info("{}, {}", entity.getId1(), entity.getId2());
+        log.info("{}, {}", entity.getId().getId1(), entity.getId().getId2());
     }
 }
