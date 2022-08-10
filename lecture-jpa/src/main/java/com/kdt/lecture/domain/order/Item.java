@@ -8,8 +8,9 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "item")
-public class Item {
+public abstract class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
