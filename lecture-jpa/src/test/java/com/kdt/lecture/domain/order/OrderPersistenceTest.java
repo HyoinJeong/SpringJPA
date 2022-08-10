@@ -2,6 +2,7 @@ package com.kdt.lecture.domain.order;
 
 import com.kdt.lecture.domain.CustomerRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,11 +102,18 @@ class OrderPersistenceTest {
         order.setOrderDateTime(LocalDateTime.now());
         order.setMemo("부재시 연락주세요");
         order.setMember(member);
+//        member.setOrders(Lists.newArrayList(order));
 
         entityManager.persist(order);
 
         transaction.commit();
 
-        log.info("{}",order.getMember().getNickName());
+        entityManager.clear();
+        Order entity = entityManager.find(Order.class, order.getUuid());
+
+        log.info("{}",entity.getMember().getNickName()); // 객체 그래프 탐색
+        log.info("{}", entity.getMember().getOrders().size());
+        log.info("{}", order.getMember().getOrders().size());
+
     }
 }
