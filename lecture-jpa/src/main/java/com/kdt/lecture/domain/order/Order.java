@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -33,6 +34,9 @@ public class Order extends BaseEntity{
     @JoinColumn(name = "member_id", referencedColumnName = "id")
     private Member member;
 
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderItem> orderItems;
+
 
     // 연관관계 편의 메소드
     public void setMember(Member member) {
@@ -42,5 +46,9 @@ public class Order extends BaseEntity{
 
         this.member = member;
         member.getOrders().add(this);
+    }
+
+    public void addOrderItem(OrderItem orderItem) {
+        orderItem.setOrder(this);
     }
 }

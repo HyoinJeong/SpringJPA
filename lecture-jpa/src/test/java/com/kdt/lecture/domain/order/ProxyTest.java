@@ -63,4 +63,22 @@ public class ProxyTest {
         String nickName = member.getNickName();// 이런게 사용하는 것
         log.info("MEMBER USE BEFORE IS-LOADED: {}", emf.getPersistenceUnitUtil().isLoaded(member)); // 프록시객체 사용후이므로 entity객체 -> true 나와야함
     }
+
+    @Test
+    void move_persist() {
+        EntityManager entityManager = emf.createEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+
+        Order order = entityManager.find(Order.class,uuid);// 영속상태
+
+        transaction.begin();
+
+        OrderItem item = new OrderItem(); // 준영속상태
+        item.setQuantity(10);
+        item.setPrice(1000);
+
+        order.addOrderItem(item); // 영속상태로 바뀜
+
+        transaction.commit(); // flush
+    }
 }
