@@ -80,5 +80,16 @@ public class ProxyTest {
         order.addOrderItem(item); // 영속상태로 바뀜
 
         transaction.commit(); // flush
+
+        // 고아 상태
+        entityManager.clear();
+        Order order2 = entityManager.find(Order.class,uuid);
+
+        transaction.begin();
+
+        order2.getOrderItems().remove(0);
+        
+        transaction.commit();
+
     }
 }
