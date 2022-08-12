@@ -1,12 +1,17 @@
 package com.kdt.lecture.order.service;
 
+import com.kdt.lecture.domain.order.Order;
 import com.kdt.lecture.domain.order.OrderRepository;
 import com.kdt.lecture.domain.order.OrderStatus;
 import com.kdt.lecture.order.dto.*;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,7 +31,7 @@ class OrderServiceTest {
 
     String uuid = UUID.randomUUID().toString();
 
-    @Test
+    @BeforeEach
     void save_test () {
         // Given
         OrderDto orderDto = OrderDto.builder()
@@ -63,4 +68,33 @@ class OrderServiceTest {
         // Then
         assertThat(uuid).isEqualTo(savedUuid);
     }
+
+    @AfterEach
+    void tearDown(){
+        orderRepository.deleteAll();
+    }
+
+    @Test
+    void findOneTest(){
+        // Given
+        String orderUuid = uuid;
+        // When
+        OrderDto one = orderService.findOne(uuid);
+        // Then
+        assertThat(one.getUuid()).isEqualTo(orderUuid);
+    }
+
+    @Test
+    void findAllTest(){
+        // Given
+        PageRequest page = PageRequest.of(0,10);
+
+        // When
+        Page<OrderDto> all = orderService.findAll(page);
+
+        // Then
+        assertThat(all.getTotalElements()).isEqualTo(1); // 우리는 1개만 추가했으니 1개가 나와야함
+    }
+
+
 }
